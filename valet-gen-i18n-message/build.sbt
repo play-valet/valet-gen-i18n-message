@@ -1,0 +1,13 @@
+lazy val root = (project in file("."))
+  .settings(
+    name         := "valet-gen-i18n-message",
+    scalaVersion := "2.11.8",
+    libraryDependencies ++= List(
+      "org.scalaj" %% "scalaj-http" % "2.3.0",
+      "com.typesafe" % "config" % "1.3.1",
+      "commons-io" % "commons-io" % "2.5",
+      "org.skinny-framework" %% "skinny-framework" % "2.3.5",
+      "org.skinny-framework" %% "skinny-task" % "2.3.5",
+      "org.scalameta" %% "scalameta" % "1.7.0"
+    )
+  )
