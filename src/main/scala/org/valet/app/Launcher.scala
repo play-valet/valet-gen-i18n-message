@@ -41,15 +41,15 @@ object Launcher {
       ScUtils.cli("tar xpvf master.tar.gz")
       ScUtils.cli("rm master.tar.gz")
       ScUtils.cli("mv valet-gen-i18n-message-master valet-gen-i18n-message")
-      ScUtils.cli("""rm -rf valet-gen-i18n-message/build.sbt""")
-      ScUtils.cli("""mkdir ./conf""")
-      ScUtils.cli("""mkdir ./valet""")
-      ScUtils.cli("""mkdir ./valet/downloads""")
-      ScUtils.cli("""rm -rf valet/downloads/valet-gen-i18n-message""")
-      ScUtils.cli("""mv valet-gen-i18n-message valet/downloads/""")
+      ScUtils.cli("rm -rf valet-gen-i18n-message/build.sbt")
+      ScUtils.cli("mkdir ./conf")
+      ScUtils.cli("mkdir ./valet")
+      ScUtils.cli("mkdir ./valet/downloads")
+      ScUtils.cli("rm -rf valet/downloads/valet-gen-i18n-message")
+      ScUtils.cli("mv valet-gen-i18n-message valet/downloads/")
       k2.foreach { ln =>
         if (ln != baseLangage) {
-          ScUtils.cli(s"""cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf""")
+          ScUtils.cli(s"cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf")
         }
       }
     }
