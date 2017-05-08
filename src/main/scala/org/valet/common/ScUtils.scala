@@ -100,6 +100,9 @@ object ScUtils extends ScProjectUtils {
   def makeFileIfNotExist(file: File): Unit = {
     file.createNewFile()
   }
+  def makeDirIfNotExist(file: File): Unit = {
+    file.mkdir()
+  }
 
   def writeIfAbsent(file: File, code: String) {
     FileUtils.forceMkdir(file.getParentFile)

@@ -42,9 +42,9 @@ object Launcher {
       ScUtils.cli("rm master.tar.gz")
       ScUtils.cli("mv valet-gen-i18n-message-master valet-gen-i18n-message")
       ScUtils.cli("rm -rf valet-gen-i18n-message/build.sbt")
-      ScUtils.cli("mkdir ./conf")
-      ScUtils.cli("mkdir ./valet")
-      ScUtils.cli("mkdir ./valet/downloads")
+      ScUtils.makeDirIfNotExist(new File("./conf"))
+      ScUtils.makeDirIfNotExist(new File("./valet"))
+      ScUtils.makeDirIfNotExist(new File("./valet/downloads"))
       ScUtils.cli("rm -rf valet/downloads/valet-gen-i18n-message")
       ScUtils.cli("mv valet-gen-i18n-message valet/downloads/")
       k2.foreach { ln =>
