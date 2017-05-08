@@ -3,7 +3,8 @@ package org.valet.app
 import java.io._
 
 import com.typesafe.config.{Config, ConfigFactory}
-import org.valet.common.{ScUtils, ScaffoldLoader}
+import org.valet.common.ScaffoldLoader.ConfDto
+import org.valet.common.{PathDto, ScUtils, ScaffoldLoader}
 
 import scalaj.http.{Http, HttpRequest, HttpResponse}
 
@@ -29,28 +30,34 @@ object Launcher {
   }
 
   def init(filepath: String) {
-    val dtos = ScaffoldLoader.getScaffoldDtos(filepath)
-    val k1 = dtos.confDto.modulesI18nMessageConfIsUse
-    val k2 = dtos.confDto.modulesI18nMessageConfI18nList
+    val conf: Config = ConfigFactory.parseFile(new File(filepath))
+    val confDto: ConfDto = ScaffoldLoader.getConfDto(conf)
+    val k1 = confDto.modulesI18nMessageConfIsUse
+    val k2 = confDto.modulesI18nMessageConfI18nList
     val baseLangage = "ja"
 
     if (k1 == "YES") {
+      ScUtils.cli(s"""git clone git@github.com:valet-org/valet-gen-i18n-message.git""")
+      ScUtils.cli(s"""rm -rf valet-gen-i18n-message/.git""")
+      ScUtils.cli(s"""rm -rf valet-gen-i18n-message/build.sbt""")
+      ScUtils.cli(s"""mkdir ./conf""")
+      ScUtils.cli(s"""mkdir ./valet""")
+      ScUtils.cli(s"""mkdir ./valet/downloads""")
+      ScUtils.cli(s"""rm -rf valet/downloads/valet-gen-i18n-message""")
+      ScUtils.cli(s"""mv valet-gen-i18n-message valet/downloads/""")
       k2.foreach { ln =>
         if (ln != baseLangage) {
-          ScUtils.cli(s"""wget --no-check-certificate  https://github.com/valet-org/valet-gen-i18n-message/archive/master.tar.gz -O - | tar xzv""")
-          ScUtils.cli(s"""mkdir ./valet""")
-          ScUtils.cli(s"""mkdir ./valet/downloads""")
-          ScUtils.cli(s"""mv ./valet-gen-i18n-message-master             ./valet/downloads/valet-gen-i18n-message/conf/messages.${ln}""")
-          ScUtils.cli(s"""cp ./valet/downloads/valet-gen-i18n-message/conf/messages.${ln} ./conf""")
+          ScUtils.cli(s"""cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf""")
         }
       }
     }
   }
 
   def gen(filepath: String) {
-    val dtos = ScaffoldLoader.getScaffoldDtos(filepath)
-    val k1 = dtos.confDto.modulesI18nMessageConfIsUse
-    val k2 = dtos.confDto.modulesI18nMessageConfI18nList
+    val conf: Config = ConfigFactory.parseFile(new File(filepath))
+    val confDto: ConfDto = ScaffoldLoader.getConfDto(conf)
+    val k1 = confDto.modulesI18nMessageConfIsUse
+    val k2 = confDto.modulesI18nMessageConfI18nList
     val baseLangage = "ja"
 
     if (k1 == "YES") {
