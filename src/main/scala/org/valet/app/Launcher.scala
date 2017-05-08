@@ -1,8 +1,9 @@
-package foo
+package org.valet.app
 
 import java.io._
 
 import com.typesafe.config.{Config, ConfigFactory}
+import org.valet.common.{ScUtils, ScaffoldLoader}
 
 import scalaj.http.{Http, HttpRequest, HttpResponse}
 
@@ -10,11 +11,56 @@ import scalaj.http.{Http, HttpRequest, HttpResponse}
 object Launcher {
 
   def main(args: Array[String]) {
+    args.toList match {
+      case name :: params if (name == "init") => init(params.headOption.getOrElse((new File(".").getCanonicalPath() + "/valet.conf")))
+      case name :: params if (name == "gen")  => gen(params.headOption.getOrElse((new File(".").getCanonicalPath() + "/valet.conf")))
+      case _                                  => showUsage
+    }
+  }
+
+  def showUsage = {
+    println(
+      s"""
+         | Usage:
+         |        sbt "run init $$(pwd)/valet.conf"
+         |        sbt "run gen  $$(pwd)/valet.conf"
+       """.stripMargin
+    )
+  }
+
+  def init(filepath: String) {
+    val dtos = ScaffoldLoader.getScaffoldDtos(filepath)
+    val k1 = dtos.confDto.modulesI18nMessageConfIsUse
+    val k2 = dtos.confDto.modulesI18nMessageConfI18nList
     val baseLangage = "ja"
 
-    Seq("en", "fr", "zh-cn", "zh-tw").foreach { ln =>
-      generateI18nMsgFile(ln, baseLangage)
+    if (k1 == "YES") {
+      k2.foreach { ln =>
+        if (ln != baseLangage) {
+          ScUtils.cli(s"""wget --no-check-certificate  https://github.com/valet-org/valet-gen-i18n-message/archive/master.tar.gz -O - | tar xzv""")
+          ScUtils.cli(s"""mkdir ./valet""")
+          ScUtils.cli(s"""mkdir ./valet/downloads""")
+          ScUtils.cli(s"""mv ./valet-gen-i18n-message-master             ./valet/downloads/valet-gen-i18n-message/conf/messages.${ln}""")
+          ScUtils.cli(s"""cp ./valet/downloads/valet-gen-i18n-message/conf/messages.${ln} ./conf""")
+        }
+      }
     }
+  }
+
+  def gen(filepath: String) {
+    val dtos = ScaffoldLoader.getScaffoldDtos(filepath)
+    val k1 = dtos.confDto.modulesI18nMessageConfIsUse
+    val k2 = dtos.confDto.modulesI18nMessageConfI18nList
+    val baseLangage = "ja"
+
+    if (k1 == "YES") {
+      k2.foreach { ln =>
+        if (ln != baseLangage) {
+          generateI18nMsgFile(ln, baseLangage)
+        }
+      }
+    }
+
   }
 
   private def generateI18nMsgFile(toLang: String, baseLangage: String) = {
