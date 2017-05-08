@@ -5,6 +5,7 @@ button.store.form=Naar de registratiepagina
 button.edit=Bewerken
 button.edit.form=Naar het scherm bewerken
 button.detail=Voor meer informatie
+button.detail.form=Detail scherm
 button.delete=Verwijderen
 button.cancel=Annuleren
 success=Succes

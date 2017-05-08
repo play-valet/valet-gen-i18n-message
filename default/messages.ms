@@ -5,6 +5,7 @@ button.store.form=Ke laman pendaftaran
 button.edit=Edit
 button.edit.form=Pada skrin Edit
 button.detail=Untuk maklumat lanjut
+button.detail.form=Skrin terperinci
 button.delete=Hapus
 button.cancel=Batal
 success=Kejayaan

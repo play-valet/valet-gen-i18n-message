@@ -5,6 +5,7 @@ button.store.form=На страницу регистрации
 button.edit=Редактировать
 button.edit.form=На экране редактирования
 button.detail=Для получения дополнительной информации
+button.detail.form=Подробный экран
 button.delete=Удалить
 button.cancel=Отмена
 success=Успех

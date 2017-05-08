@@ -5,6 +5,7 @@ button.store.form=신규 등록 화면으로
 button.edit=편집
 button.edit.form=편집 화면에
 button.detail=자세한 내용은
+button.detail.form=세부 정보 화면에
 button.delete=삭제
 button.cancel=취소
 success=성공

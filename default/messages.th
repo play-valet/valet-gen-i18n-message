@@ -5,6 +5,7 @@ button.store.form=ไปหน้าลงทะเบียน
 button.edit=แก้ไข
 button.edit.form=ไปหน้าจอแก้ไข
 button.detail=สำหรับข้อมูลเพิ่มเติม
+button.detail.form=หน้าจอรายละเอียด
 button.delete=ลบ
 button.cancel=ยกเลิก
 success=ประสบความสำเร็จ

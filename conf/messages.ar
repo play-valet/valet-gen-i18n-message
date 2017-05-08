@@ -5,6 +5,7 @@ button.store.form=إلى صفحة التسجيل
 button.edit=تحرير
 button.edit.form=على الشاشة تحرير
 button.detail=لمزيد من المعلومات
+button.detail.form=شاشة تفاصيل
 button.delete=حذف
 button.cancel=إلغاء الأمر
 success=نجاح

@@ -5,6 +5,7 @@ button.store.form=向注册页
 button.edit=编辑
 button.edit.form=编辑屏幕
 button.detail=更多的信息
+button.detail.form=详细信息屏幕
 button.delete=删除
 button.cancel=取消
 success=成功
