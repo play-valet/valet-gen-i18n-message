@@ -1,7 +1,7 @@
 
-// command : sbt "arrangeI18nMsgs/run init $(pwd)/valet.conf"
+// command : sbt "genI18nMsgs/run init $(pwd)/valet.conf"
 // -----------------------------
-lazy val arrangeI18nMsgs = (project in file("valet/valet-gen-i18n-message"))
+lazy val genI18nMsgs = (project in file("valet/valet-gen-i18n-message"))
   .settings(
     name         := "valet-gen-i18n-message",
     scalaVersion := "2.11.8",
