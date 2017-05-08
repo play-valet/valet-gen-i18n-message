@@ -48,9 +48,7 @@ object Launcher {
       ScUtils.cli("rm -rf valet/downloads/valet-gen-i18n-message")
       ScUtils.cli("mv valet-gen-i18n-message valet/downloads/")
       k2.foreach { ln =>
-        if (ln != baseLangage) {
-          ScUtils.cli(s"cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf")
-        }
+        ScUtils.cli(s"cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf")
       }
     }
   }
