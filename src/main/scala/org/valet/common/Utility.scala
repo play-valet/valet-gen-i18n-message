@@ -5,29 +5,10 @@ import java.net.URL
 import java.nio.charset.Charset
 
 import org.apache.commons.io.FileUtils
-import skinny.util.StringUtil
 
 import scala.sys.process._
 
-object ScUtils extends ScProjectUtils {
-  val ANSI_RESET = "\u001B[0m"
-  val ANSI_BLACK = "\u001B[30m"
-  val ANSI_RED = "\u001B[31m"
-  val ANSI_GREEN = "\u001B[32m"
-  val ANSI_YELLOW = "\u001B[33m"
-  val ANSI_BLUE = "\u001B[34m"
-  val ANSI_PURPLE = "\u001B[35m"
-  val ANSI_CYAN = "\u001B[36m"
-  val ANSI_WHITE = "\u001B[37m"
-
-  val ANSI_BLACK_BACKGROUND = "\u001B[40m"
-  val ANSI_RED_BACKGROUND = "\u001B[41m"
-  val ANSI_GREEN_BACKGROUND = "\u001B[42m"
-  val ANSI_YELLOW_BACKGROUND = "\u001B[43m"
-  val ANSI_BLUE_BACKGROUND = "\u001B[44m"
-  val ANSI_PURPLE_BACKGROUND = "\u001B[45m"
-  val ANSI_CYAN_BACKGROUND = "\u001B[46m"
-  val ANSI_WHITE_BACKGROUND = "\u001B[47m"
+trait Utility {
 
   def charset: Charset = Charset.defaultCharset()
 
@@ -84,24 +65,21 @@ object ScUtils extends ScProjectUtils {
     }
   }
 
-  def cli(command: String) = {
+  def cli(command: String): Int = {
     command.!
   }
 
-  def echoErrorMsg(e: String) = {
+  def echoErrorMsg(e: String): Unit = {
     System.out.println(
       s"""
          |-- ERROR OCCURRED --
-         |${e}
+         |$e
           """.stripMargin
     )
   }
 
   def makeFileIfNotExist(file: File): Unit = {
     file.createNewFile()
-  }
-  def makeDirIfNotExist(file: File): Unit = {
-    file.mkdir()
   }
 
   def writeIfAbsent(file: File, code: String) {
@@ -111,6 +89,16 @@ object ScUtils extends ScProjectUtils {
     } else {
       FileUtils.write(file, code, charset)
       println("  \"" + file.getPath + "\" created.")
+    }
+  }
+
+  def forceMkdir(file: File): Unit = {
+    FileUtils.forceMkdir(file)
+  }
+
+  def forceWrite(fullpath: String, body: String): Unit = {
+    tryOpt {
+      forceWrite(new File(fullpath), body)
     }
   }
 
@@ -137,11 +125,12 @@ object ScUtils extends ScProjectUtils {
   }
 
   def getDirFileList(dir: String, result: Seq[java.io.File]): Seq[java.io.File] = {
-    val list: Seq[java.io.File] = (new java.io.File(dir).listFiles).toSeq
+    val list: Seq[java.io.File] = new java.io.File(dir).listFiles.toSeq
     list.flatMap { x =>
-      x.isDirectory match {
-        case true  => getDirFileList(x.getPath, list)
-        case false => result.:+(x)
+      if (x.isDirectory) {
+        getDirFileList(x.getPath, list)
+      } else {
+        result.:+(x)
       }
     }.distinct.sortBy(f => f.toString)
   }
@@ -153,16 +142,8 @@ object ScUtils extends ScProjectUtils {
       con.getInputStream
       true
     } catch {
-      case e: IOException => false
+      case _: IOException => false
     }
-  }
-
-}
-
-trait ScProjectUtils {
-
-  def pTableName(table: SlickTable): String = {
-    ScUtils.toFirstCharLower(table.tableName.dropRight(3))
   }
 
 }

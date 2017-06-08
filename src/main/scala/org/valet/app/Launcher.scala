@@ -3,23 +3,23 @@ package org.valet.app
 import java.io._
 
 import com.typesafe.config.{Config, ConfigFactory}
-import org.valet.common.ScaffoldLoader.ConfDto
-import org.valet.common.{PathDto, ScUtils, ScaffoldLoader}
+import org.valet.common.Loaders.ConfDto
+import org.valet.common.{Loaders, ValetUtility}
 
 import scalaj.http.{Http, HttpRequest, HttpResponse}
 
 
-object Launcher {
+object Launcher extends ValetUtility {
 
   def main(args: Array[String]) {
     args.toList match {
-      case name :: params if (name == "init") => init(params.headOption.getOrElse((new File(".").getCanonicalPath() + "/valet.conf")))
-      case name :: params if (name == "gen")  => gen(params.headOption.getOrElse((new File(".").getCanonicalPath() + "/valet.conf")))
-      case _                                  => showUsage
+      case name :: params if name == "init" => init(params.headOption.getOrElse(new File(".").getCanonicalPath + "/valet.conf"))
+      case name :: params if name == "gen"  => gen(params.headOption.getOrElse(new File(".").getCanonicalPath + "/valet.conf"))
+      case _                                => showUsage()
     }
   }
 
-  def showUsage = {
+  def showUsage(): Unit = {
     println(
       s"""
          | Usage:
@@ -31,31 +31,31 @@ object Launcher {
 
   def init(filepath: String) {
     val conf: Config = ConfigFactory.parseFile(new File(filepath))
-    val confDto: ConfDto = ScaffoldLoader.getConfDto(conf)
+    val confDto: ConfDto = Loaders.getConfDto(conf)
     val k1 = confDto.modulesI18nMessageConfIsUse
     val k2 = confDto.modulesI18nMessageConfI18nList
     val baseLangage = "ja"
 
     if (k1 == "YES") {
-      ScUtils.cli("wget --no-check-certificate  https://github.com/valet-org/valet-gen-i18n-message/archive/master.tar.gz")
-      ScUtils.cli("tar xpvf master.tar.gz")
-      ScUtils.cli("rm master.tar.gz")
-      ScUtils.cli("mv valet-gen-i18n-message-master valet-gen-i18n-message")
-      ScUtils.cli("rm -rf valet-gen-i18n-message/build.sbt")
-      ScUtils.makeDirIfNotExist(new File("./conf"))
-      ScUtils.makeDirIfNotExist(new File("./valet"))
-      ScUtils.makeDirIfNotExist(new File("./valet/downloads"))
-      ScUtils.cli("rm -rf valet/downloads/valet-gen-i18n-message")
-      ScUtils.cli("mv valet-gen-i18n-message valet/downloads/")
+      cli("wget --no-check-certificate  https://github.com/play-valet/valet-gen-i18n-message/archive/master.tar.gz")
+      cli("tar xpvf master.tar.gz")
+      cli("rm master.tar.gz")
+      cli("mv valet-gen-i18n-message-master valet-gen-i18n-message")
+      cli("rm -rf valet-gen-i18n-message/build.sbt")
+      forceMkdir(new File("./conf"))
+      forceMkdir(new File("./valet"))
+      forceMkdir(new File("./valet/downloads"))
+      cli("rm -rf valet/downloads/valet-gen-i18n-message")
+      cli("mv valet-gen-i18n-message valet/downloads/")
       k2.foreach { ln =>
-        ScUtils.cli(s"cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf")
+        cli(s"cp ./valet/downloads/valet-gen-i18n-message/default/messages.${ln} ./conf")
       }
     }
   }
 
   def gen(filepath: String) {
     val conf: Config = ConfigFactory.parseFile(new File(filepath))
-    val confDto: ConfDto = ScaffoldLoader.getConfDto(conf)
+    val confDto: ConfDto = Loaders.getConfDto(conf)
     val k1 = confDto.modulesI18nMessageConfIsUse
     val k2 = confDto.modulesI18nMessageConfI18nList
     val baseLangage = "ja"
