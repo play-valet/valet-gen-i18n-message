@@ -1,3 +1,1 @@
-# valet-gen-i18n-message
-
-https://github.com/valet-org/valet
+https://github.com/play-valet/valet
